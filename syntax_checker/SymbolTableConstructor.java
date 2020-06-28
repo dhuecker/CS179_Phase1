@@ -17,16 +17,16 @@ public class SymbolTableConstructor implements Visitor {
     }
     //Helper functions below
 
-    public String classname(MainClass mclass) {
-        return mclass.f1.f0.toString();
+    public String classname(MainClass mc) {
+        return mc.f1.f0.toString();
     }
 
     public String idName(Identifier id) {
         return id.f0.toString();
     }
 
-    public String classname(ClassDeclaration cd) {
-        return cd.f1.f0.toString();
+    public String classname(ClassDeclaration c) {
+        return c.f1.f0.toString();
     }
 
     public String methodname(MethodDeclaration md) {
@@ -52,7 +52,7 @@ public class SymbolTableConstructor implements Visitor {
                     } else {
                         param_x = ((FormalParameterRest) fpl.f1.elementAt(a)).f1;
                     }
-                    if (j == -1) {
+                    if (b == -1) {
                         param_y = fpl.f0;
                     } else {
                         param_y = ((FormalParameterRest) fpl.f1.elementAt(b)).f1;
@@ -394,9 +394,386 @@ public class SymbolTableConstructor implements Visitor {
         x.f1.accept(this);
 
         if (currentMethod == null){
+            if(currentClass.myItems.alreadyEx(Symbol.symbol(idName(x.f1))))
+                RegTypeError();
 
-
+            if(x.f0.f0.choice instanceof ArrayType)
+                currentClass.myItems.put(Symbol.symbol(idName(x.f1)), new ArrayBook());
+            if(x.f0.f0.choice instanceof BooleanType)
+                currentClass.myItems.put(Symbol.symbol(idName(x.f1)), new BoolBook());
+            if(x.f0.f0.choice instanceof IntegerType)
+                currentClass.myItems.put(Symbol.symbol(idName(x.f1)), new IntBook());
+            if(x.f0.f0.choice instanceof Identifier)
+                currentClass.myItems.put(Symbol.symbol(idName(x.f1)), new ClassBook(((Identifier) x.f0.f0.choice).f0.toString()));
         }
-    }
+        else{
+            if(currentMethod.myItems.alreadyEx(Symbol.symbol(idName(x.f1))))
+                RegTypeError();
+            if(x.f0.f0.choice instanceof ArrayType){
+                currentMethod.myItems.put(Symbol.symbol(idName(x.f1)), new ArrayBook());
+                currentMethod.ptypes.add(CheckVisitor.ArrayTypeStr);
+            }
+            if(x.f0.f0.choice instanceof BooleanType){
+                currentMethod.myItems.put(Symbol.symbol(idName(x.f1)), new BoolBook());
+                currentMethod.ptypes.add(CheckVisitor.BoolTypeStr);
+            }
+            if(x.f0.f0.choice instanceof IntegerType){
+                currentMethod.myItems.put(Symbol.symbol(idName(x.f1)), new IntBook());
+                currentMethod.ptypes.add(CheckVisitor.IntTypeStr);
+            }
+            if(x.f0.f0.choice instanceof Identifier){
+                currentMethod.myItems.put(Symbol.symbol(idName(x.f1)), new ClassBook(((Identifier) x.f0.f0.choice).f0.toString()));
+                currentMethod.ptypes.add(((Identifier) x.f0.f0.choice).f0.toString());
+            }
+        }
+    } //end 9th
 
-}
+    //10th
+    //f0 -> ,
+    //f1 -> FormalParameter()
+
+    public void visit(FormalParameterRest x){
+        x.f0.accept(this);
+        x.f1.accept(this);
+    } //end 10th
+
+    //11th
+    //f0 -> ArrayType() | BooleanType() | IntegerType() | Identifier()
+
+    public void visit(Type x){
+        x.f0.accept(this);
+    } //end 11th
+
+    //12th
+    //f0 -> int
+    //f1-> [
+    //f2 -> ]
+
+    public void visit(ArrayType x){
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+    } //end 12th
+
+    //13th
+    //f0 -> boolean
+
+    public void visit(BooleanType x){
+        x.f0.accept(this);
+    } //end 13th
+
+    //14th
+    //f0 -> int
+
+    public void visit(IntegerType x){
+        x.f0.accept(this);
+    } //end 14th
+
+    //15th
+    //f0 -> Block()| PrintStatement() | IfStatement() | WhileStatement() | ArrayAssignmentStatement() | AssignmentStatement ()
+
+    public void visit (Statement x){
+        x.f0.accept(this);
+    } //end 15th
+
+    //16th
+    //f0 -> {
+    //f1 -> ( Statement() )*
+    //f2 -> }
+
+    public void visit(Block x){
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+    } //end 16th
+
+    //17th
+    //f0 -> Identifier
+    //f1 -> =
+    //f2 -> Expression()
+    //f3 -> ;
+
+    public void visit(AssignmentStatement x){
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+        x.f3.accept(this);
+    } //end 17th
+
+    //18th
+    //f0 -> Identifier()
+    //f1 -> [
+    //f2 -> Expression()
+    //f3 -> ]
+    //f4 -> =
+    //f5 -> Expression()
+    //f6 -> ;
+
+    public void visit(ArrayAssignmentStatement x){
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+        x.f3.accept(this);
+        x.f4.accept(this);
+        x.f5.accept(this);
+        x.f6.accept(this);
+    } //end 18th
+
+    //19th
+    //f0 -> if
+    //f1 -> (
+    //f2 -> Expression()
+    //f3 -> )
+    //f4 -> Statement()
+    //f5 -> else
+    //f6 -> Statement()
+
+    public void visit(IfStatement x){
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+        x.f3.accept(this);
+        x.f4.accept(this);
+        x.f5.accept(this);
+        x.f6.accept(this);
+    } //end 19th
+
+    //20th
+    //f0 -> while
+    //f1 -> (
+    //f2 -> Expression()
+    //f3 -> )
+    //f4 -> Statement()
+
+    public void visit(WhileStatement x){
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+        x.f3.accept(this);
+        x.f4.accept(this);
+    } //end 20th
+
+    //21th
+    //f0 -> System.out.println
+    //f1 -> (
+    //f2 -> Expression()
+    //f3 -> )
+    //f4 -> ;
+
+    public void visit(PrintStatement x){
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+        x.f3.accept(this);
+        x.f4.accept(this);
+    } //end 21th
+
+    //22th
+    //f0 -> PrimaryExpression() | CompareExpression() | PlusExpression() | MinusExpression() | TimesExpression() | AndExpression() | ArrayLookup() | ArrayLength() | MessageSend()
+
+    public void visit (Expression x){
+        x.f0.accept(this);
+    } //end 22th
+
+    //23th
+    //f0 -> PrimaryExpression()
+    //f1 -> &&
+    //f2 -> PrimaryExpression()
+
+    public void visit(AndExpression x){
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+    } //end 23th
+
+    //24th
+    //f0 -> PrimaryExpression()
+    //f1 -> <
+    //f2 -> PrimaryExpression()
+
+    public void visit(CompareExpression x){
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+    } // end 24th
+
+    //25th
+    //f0 -> PrimaryExpression()
+    //f1 -> +
+    //f2 -> PrimaryExpression()
+
+    public void visit(PlusExpression x){
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+    }//end 25th
+
+    //26th
+    //f0 -> PrimaryExpression()
+    //f1 -> -
+    //f2 -> PrimaryExpression()
+    public void visit(MinusExpression x){
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+    } //end 26th
+
+    //27th
+    //f0 -> PrimaryExpression()
+    //f1 -> *
+    //f2 -> PrimaryExpression()
+
+    public void visit(TimesExpression x){
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+    } //end 27th
+
+    //28th
+    //f0 -> PrimaryExpression()
+    //f1 -> [
+    //f2 -> PrimaryExpression()
+    //f3 -> ]
+
+    public void visit(ArrayLookup x){
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+        x.f3.accept(this);
+    } //end 28th
+
+    //29th
+    //f0 -> PrimaryExpression()
+    //f1 -> .
+    //f2 -> length
+
+    public void visit(ArrayLength x){
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+    } //end 29th
+
+    //30th
+    //f0 -> PrimaryExpression()
+    //f1 -> .
+    //f2 -> Identifier()
+    //f3 -> (
+    //f4 -> ExpressionList() )?
+    //f5 -> )
+
+    public void visit(MessageSend x){
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+        x.f3.accept(this);
+        x.f4.accept(this);
+        x.f5.accept(this);
+    } //end 30th
+
+    //31th
+    //f0 -> Expression()
+    //f1 -> ( ExpressionRest())*
+
+    public void visit(ExpressionList x){
+        x.f0.accept(this);
+        x.f1.accept(this);
+    }//end 31th
+
+    //32th
+    //f0 -> ,
+    //f1 -> Expression()
+
+    public void visit(ExpressionRest x){
+        x.f0.accept(this);
+        x.f1.accept(this);
+    } //end 32th
+
+    //33th
+    //f0 -> BracketExpression() | ArrayAllocationExpression() | AllocationExpression() | ThisExpression() | NotExpression() | Identifier() | TrueLiteral() | FalseLiteral() | IntegerLiteral()
+
+    public void visit(PrimaryExpression x){
+        x.f0.accept(this);
+    }//end 33th
+
+    //34th
+    //f0 -> <INTERGER_LITERAL>
+
+    public void visit(IntegerLiteral x){
+        x.f0.accept(this);
+    }//end 34th
+
+    //35th
+    //f0 -> false
+    public void visit(FalseLiteral x){
+        x.f0.accept(this);
+    }//end 35th
+
+    //36th
+    //f0 -> true
+    public void visit(TrueLiteral x){
+        x.f0.accept(this);
+    }//end 36th
+
+    //37th
+    //f0 -> <IDENTIFIER>
+
+    public void visit(Identifier x){
+        x.f0.accept(this);
+    }//end 37th
+
+    //38th
+    //f0 -> ths
+
+    public void visit(ThisExpression x){
+        x.f0.accept(this);
+    } //end 38th
+
+    //39th
+    //f0 -> new
+    //f1 -> int
+    //f2 -> [
+    //f3 -> Expression()
+    //f4 -> ]
+
+    public void visit(ArrayAllocationExpression x){
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+        x.f3.accept(this);
+        x.f4.accept(this);
+    } //end 39th
+
+    //40th
+    //f0 -> new
+    //f1 -> Identifier()
+    //f2 -> (
+    //f3 -> )
+
+    public void visit(AllocationExpression x){
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+        x.f3.accept(this);
+    } //end 40th
+
+    //41th
+    //f0 -> (
+    //f1 -> Expression()
+    //f2 -> )
+
+    public void visit(BracketExpression x){
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+    }//end 41th
+
+    //42th
+    //f0 -> !
+    //f1 -> Expression()
+
+    public void visit(NotExpression x){
+        x.f0.accept(this);
+        x.f1.accept(this);
+    }//end 42th
+
+}//end SymbolTableConstructor Class
