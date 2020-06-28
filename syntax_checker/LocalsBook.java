@@ -1,4 +1,5 @@
 package syntax_checker;
 
-public class LocalsBook {
+public class LocalsBook extends Book {
+    public LocalsBook() {}
 }

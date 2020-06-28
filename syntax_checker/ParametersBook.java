@@ -1,4 +1,5 @@
 package syntax_checker;
 
-public class ParametersBook {
+public class ParametersBook extends Book {
+    public ParametersBook(){}
 }
