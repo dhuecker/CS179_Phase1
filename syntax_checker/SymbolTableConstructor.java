@@ -20,6 +20,9 @@ public class SymbolTableConstructor implements Visitor {
     public String classname(MainClass mc) {
         return mc.f1.f0.toString();
     }
+    public String classname(ClassExtendsDeclaration ced){
+        return ced.f1.f0.toString();
+    }
 
     public String idName(Identifier id) {
         return id.f0.toString();
@@ -201,7 +204,7 @@ public class SymbolTableConstructor implements Visitor {
 
     public void visit(MainClass mc){
         ClassBook tempb = new ClassBook(classname(mc));
-        currentClass = temp; //need to fix this
+        currentClass = tempb; //need to fix this
 
         mc.f0.accept(this);
         mc.f1.accept(this);
@@ -222,7 +225,7 @@ public class SymbolTableConstructor implements Visitor {
         mc.f16.accept(this);
         mc.f17.accept(this);
 
-        symbolTable.put(Symbol.symbol(classname(mc)), tempb);
+        sTable.put(Symbol.symbol(classname(mc)), tempb);
         currentMethod = null;
 
     }//end 2nd
@@ -253,7 +256,7 @@ public class SymbolTableConstructor implements Visitor {
         x.f4.accept(this);
         x.f5.accept(this);
 
-        symbolTable.put(Symbol.symbol(classname(x)), tempB);
+        sTable.put(Symbol.symbol(classname(x)), tempB);
         currentMethod = null;
     } // end 4th
 
@@ -281,7 +284,7 @@ public class SymbolTableConstructor implements Visitor {
         x.f7.accept(this);
 
         tempB.parent = x.f3.f0.toString();
-        symbolTable.put(Symbol.symbol(classname(x)), tempB);
+        sTable.put(Symbol.symbol(classname(x)), tempB);
         currentMethod = null;
     } //end 5th
 
