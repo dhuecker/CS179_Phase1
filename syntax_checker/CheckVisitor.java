@@ -5,6 +5,8 @@ import java.text.Normalizer;
 import java.util.Enumeration;
 import syntaxtree.*;
 
+import javax.swing.plaf.BorderUIResource;
+
 public class CheckVisitor<R> implements GJNoArguVisitor {
     public static String ArrayTypeStr = "ARRAY_TYPE";
     public static String BoolTypeStr = "BOOL_TYPE";
@@ -178,4 +180,63 @@ public class CheckVisitor<R> implements GJNoArguVisitor {
 
     //auto class Visitors below dont need to be overridden
 
+    public R visit(NodeList x){
+        R temp = null;
+        int count = 0;
+        for(Enumeration<Node> e = x.elements(); e.hasMoreElements();){
+            e.nextElement().accept(this);
+            count++;
+        }
+        return temp;
+    }
+
+    public R visit(NodeListOptional x){
+        if(x.present()){
+            R temp = null;
+            int count = 0;
+            for(Enumeration<Node> i  = x.elements(); i.hasMoreElements();){
+                i.nextElement().accept(this);
+                count++;
+            }
+            return temp;
+        }
+        else
+            return null;
+    }
+
+    public R visit(NodeOptional x){
+        if(x.present()){
+            return x.node.accept(this);
+        }
+        else
+            return null;
+    }
+    public R visit(NodeSequence x){
+            R temp = null;
+            int count = 0;
+             for(Enumeration<Node> i = x.elements(); i.hasMoreElements();){
+                 i.nextElement().accept(this);
+                 count++;
+             }
+             return temp;
+    }
+
+    public R visit(NodeToken x){
+        return null;
+    }
+
+    //our classes below
+
+    //BracketExpression vist
+    //f0 -> (
+    //f1 -> Expression()
+    //f2 -> )
+
+    public R visit(BracketExpression x){
+        R temp = null;
+        x.f0.accept(this);
+        temp = x.f1.accept(this);
+        x.f2.accept(this);
+        return temp;
+    }
 }
