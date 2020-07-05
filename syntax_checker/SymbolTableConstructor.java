@@ -171,7 +171,7 @@ public class SymbolTableConstructor implements Visitor {
 
     //Our methods made for visitor are below
 
-    //1st
+    //Goal
     //f0 -> MainClass
     //f1 -> ( TypeDeclaration())
     //f2 -> end
@@ -180,9 +180,9 @@ public class SymbolTableConstructor implements Visitor {
         x.f0.accept(this);
         x.f1.accept(this);
         x.f2.accept(this);
-    } // end of 1st
+    } // end of Goal
 
-    //2nd
+    //MainClass
     //f0 -> "class"
     //f1 -> Identifier()
     //f2 => {
@@ -228,16 +228,16 @@ public class SymbolTableConstructor implements Visitor {
         sTable.put(Symbol.symbol(classname(mc)), tempb);
         currentMethod = null;
 
-    }//end 2nd
+    }//end mainClass
 
-    //3rd
+    //TypeDeclaration
     //f0 -> classDeclaration() | ClassExtendsDeclaration ()
 
     public void visit(TypeDeclaration x){
         x.f0.accept(this);
-    } // end 3rd
+    } // end TypeDeclaration
 
-    //4th
+    //ClassDeclaration
     //f0 -> class
     //f1 -> Identifier()
     //f2 -> {
@@ -258,9 +258,9 @@ public class SymbolTableConstructor implements Visitor {
 
         sTable.put(Symbol.symbol(classname(x)), tempB);
         currentMethod = null;
-    } // end 4th
+    } // end ClassDeclaration
 
-    //5th
+    //ClassExtendsDeclaration
     //f0 -> class
     //f1 -> Identifier()
     //f2 -> extends
@@ -286,9 +286,9 @@ public class SymbolTableConstructor implements Visitor {
         tempB.parent = x.f3.f0.toString();
         sTable.put(Symbol.symbol(classname(x)), tempB);
         currentMethod = null;
-    } //end 5th
+    } //end ClassExtendsDeclaration
 
-    //6th
+    //VarDeclaration
     //f0 -> Type()
     //f1 -> Identifier()
     //f2 -> ;
@@ -324,9 +324,9 @@ public class SymbolTableConstructor implements Visitor {
             if (x.f0.f0.choice instanceof Identifier)
                 currentMethod.myItems.put(Symbol.symbol(idName(x.f1)), new ClassBook(((Identifier) x.f0.f0.choice).f0.toString()));
         }
-    } //end 6th
+    } //end VarDeclaration
 
-    //7th
+    //MethodDeclaration
     //f0 -> public
     //f1 -> Type()
     //f2 -> Identifier()
@@ -377,18 +377,18 @@ public class SymbolTableConstructor implements Visitor {
             tempB.paramNum = 0;
         }
         currentClass.methods.put(Symbol.symbol(methodname(x)), tempB);
-    } //end 7th
+    } //end MethodDeclaration
 
-    //8th
+    //FormalParameterList
     //f0 -> FormalParameter
     //f1 -> ( FormalParameterRest() )*
 
     public void visit(FormalParameterList x){
         x.f0.accept(this);
         x.f1.accept(this);
-    } //end 8th
+    } //end FormalParameterList
 
-    //9th
+    //FormalParameter
     //f0 -> Type()
     //f1 -> Identifier()
 
@@ -429,25 +429,25 @@ public class SymbolTableConstructor implements Visitor {
                 currentMethod.ptypes.add(((Identifier) x.f0.f0.choice).f0.toString());
             }
         }
-    } //end 9th
+    } //end FormalParameter
 
-    //10th
+    //FormalParameterRest
     //f0 -> ,
     //f1 -> FormalParameter()
 
     public void visit(FormalParameterRest x){
         x.f0.accept(this);
         x.f1.accept(this);
-    } //end 10th
+    } //end FormalParameterRest
 
-    //11th
+    //Type
     //f0 -> ArrayType() | BooleanType() | IntegerType() | Identifier()
 
     public void visit(Type x){
         x.f0.accept(this);
-    } //end 11th
+    } //end Type
 
-    //12th
+    //ArrayType
     //f0 -> int
     //f1-> [
     //f2 -> ]
@@ -456,30 +456,30 @@ public class SymbolTableConstructor implements Visitor {
         x.f0.accept(this);
         x.f1.accept(this);
         x.f2.accept(this);
-    } //end 12th
+    } //end ArrayType
 
-    //13th
+    //BooleanType
     //f0 -> boolean
 
     public void visit(BooleanType x){
         x.f0.accept(this);
-    } //end 13th
+    } //end BooleanType
 
-    //14th
+    //IntegerType
     //f0 -> int
 
     public void visit(IntegerType x){
         x.f0.accept(this);
-    } //end 14th
+    } //end IntegerType
 
-    //15th
+    //Statement
     //f0 -> Block()| PrintStatement() | IfStatement() | WhileStatement() | ArrayAssignmentStatement() | AssignmentStatement ()
 
     public void visit (Statement x){
         x.f0.accept(this);
-    } //end 15th
+    } //end Statement
 
-    //16th
+    //Block
     //f0 -> {
     //f1 -> ( Statement() )*
     //f2 -> }
@@ -488,9 +488,9 @@ public class SymbolTableConstructor implements Visitor {
         x.f0.accept(this);
         x.f1.accept(this);
         x.f2.accept(this);
-    } //end 16th
+    } //end Block
 
-    //17th
+    //AssignmentStatement
     //f0 -> Identifier
     //f1 -> =
     //f2 -> Expression()
@@ -501,9 +501,9 @@ public class SymbolTableConstructor implements Visitor {
         x.f1.accept(this);
         x.f2.accept(this);
         x.f3.accept(this);
-    } //end 17th
+    } //end AssignmentStatement
 
-    //18th
+    //ArrayAssignmentStatement
     //f0 -> Identifier()
     //f1 -> [
     //f2 -> Expression()
@@ -520,9 +520,9 @@ public class SymbolTableConstructor implements Visitor {
         x.f4.accept(this);
         x.f5.accept(this);
         x.f6.accept(this);
-    } //end 18th
+    } //end ArrayAssignmentStatement
 
-    //19th
+    //IfStatement
     //f0 -> if
     //f1 -> (
     //f2 -> Expression()
@@ -539,9 +539,9 @@ public class SymbolTableConstructor implements Visitor {
         x.f4.accept(this);
         x.f5.accept(this);
         x.f6.accept(this);
-    } //end 19th
+    } //end IfStatement
 
-    //20th
+    //WhileStatement
     //f0 -> while
     //f1 -> (
     //f2 -> Expression()
@@ -554,9 +554,9 @@ public class SymbolTableConstructor implements Visitor {
         x.f2.accept(this);
         x.f3.accept(this);
         x.f4.accept(this);
-    } //end 20th
+    } //end WhileStatement
 
-    //21th
+    //PrintStatement
     //f0 -> System.out.println
     //f1 -> (
     //f2 -> Expression()
@@ -569,16 +569,16 @@ public class SymbolTableConstructor implements Visitor {
         x.f2.accept(this);
         x.f3.accept(this);
         x.f4.accept(this);
-    } //end 21th
+    } //end PrintStatement
 
-    //22th
+    //Expression
     //f0 -> PrimaryExpression() | CompareExpression() | PlusExpression() | MinusExpression() | TimesExpression() | AndExpression() | ArrayLookup() | ArrayLength() | MessageSend()
 
     public void visit (Expression x){
         x.f0.accept(this);
-    } //end 22th
+    } //end Expression
 
-    //23th
+    //AndExpression
     //f0 -> PrimaryExpression()
     //f1 -> &&
     //f2 -> PrimaryExpression()
@@ -587,9 +587,9 @@ public class SymbolTableConstructor implements Visitor {
         x.f0.accept(this);
         x.f1.accept(this);
         x.f2.accept(this);
-    } //end 23th
+    } //end AndExpression
 
-    //24th
+    //CompareExpression
     //f0 -> PrimaryExpression()
     //f1 -> <
     //f2 -> PrimaryExpression()
@@ -598,9 +598,9 @@ public class SymbolTableConstructor implements Visitor {
         x.f0.accept(this);
         x.f1.accept(this);
         x.f2.accept(this);
-    } // end 24th
+    } // end CompareExpression
 
-    //25th
+    //PlusExpression
     //f0 -> PrimaryExpression()
     //f1 -> +
     //f2 -> PrimaryExpression()
@@ -609,9 +609,9 @@ public class SymbolTableConstructor implements Visitor {
         x.f0.accept(this);
         x.f1.accept(this);
         x.f2.accept(this);
-    }//end 25th
+    }//end PlusExpression
 
-    //26th
+    //MinusExpression
     //f0 -> PrimaryExpression()
     //f1 -> -
     //f2 -> PrimaryExpression()
@@ -619,9 +619,9 @@ public class SymbolTableConstructor implements Visitor {
         x.f0.accept(this);
         x.f1.accept(this);
         x.f2.accept(this);
-    } //end 26th
+    } //end MinusExpression
 
-    //27th
+    //TimesExpression
     //f0 -> PrimaryExpression()
     //f1 -> *
     //f2 -> PrimaryExpression()
@@ -630,9 +630,9 @@ public class SymbolTableConstructor implements Visitor {
         x.f0.accept(this);
         x.f1.accept(this);
         x.f2.accept(this);
-    } //end 27th
+    } //end TimesExpression
 
-    //28th
+    //ArrayLookup
     //f0 -> PrimaryExpression()
     //f1 -> [
     //f2 -> PrimaryExpression()
@@ -643,9 +643,9 @@ public class SymbolTableConstructor implements Visitor {
         x.f1.accept(this);
         x.f2.accept(this);
         x.f3.accept(this);
-    } //end 28th
+    } //end ArrayLookup
 
-    //29th
+    //ArrayLength
     //f0 -> PrimaryExpression()
     //f1 -> .
     //f2 -> length
@@ -654,9 +654,9 @@ public class SymbolTableConstructor implements Visitor {
         x.f0.accept(this);
         x.f1.accept(this);
         x.f2.accept(this);
-    } //end 29th
+    } //end ArrayLength
 
-    //30th
+    //MessageSend
     //f0 -> PrimaryExpression()
     //f1 -> .
     //f2 -> Identifier()
@@ -671,67 +671,67 @@ public class SymbolTableConstructor implements Visitor {
         x.f3.accept(this);
         x.f4.accept(this);
         x.f5.accept(this);
-    } //end 30th
+    } //end MessageSend
 
-    //31th
+    //ExpressionList
     //f0 -> Expression()
     //f1 -> ( ExpressionRest())*
 
     public void visit(ExpressionList x){
         x.f0.accept(this);
         x.f1.accept(this);
-    }//end 31th
+    }//end ExpressionList
 
-    //32th
+    //ExpressionRest
     //f0 -> ,
     //f1 -> Expression()
 
     public void visit(ExpressionRest x){
         x.f0.accept(this);
         x.f1.accept(this);
-    } //end 32th
+    } //end ExpressionRest
 
-    //33th
+    //PrimaryExpression
     //f0 -> BracketExpression() | ArrayAllocationExpression() | AllocationExpression() | ThisExpression() | NotExpression() | Identifier() | TrueLiteral() | FalseLiteral() | IntegerLiteral()
 
     public void visit(PrimaryExpression x){
         x.f0.accept(this);
-    }//end 33th
+    }//end PrimaryExpression
 
-    //34th
+    //IntegerLiteral
     //f0 -> <INTERGER_LITERAL>
 
     public void visit(IntegerLiteral x){
         x.f0.accept(this);
-    }//end 34th
+    }//end IntegerLiteral
 
-    //35th
+    //FalseLiteral
     //f0 -> false
     public void visit(FalseLiteral x){
         x.f0.accept(this);
-    }//end 35th
+    }//end FalseLiteral
 
-    //36th
+    //TrueLiteral
     //f0 -> true
     public void visit(TrueLiteral x){
         x.f0.accept(this);
-    }//end 36th
+    }//end TrueLiteral
 
-    //37th
+    //Identifier
     //f0 -> <IDENTIFIER>
 
     public void visit(Identifier x){
         x.f0.accept(this);
-    }//end 37th
+    }//end Identifier
 
-    //38th
+    //ThisExpression
     //f0 -> ths
 
     public void visit(ThisExpression x){
         x.f0.accept(this);
-    } //end 38th
+    } //end ThisExpression
 
-    //39th
+    //ArrayAllocationExpression
     //f0 -> new
     //f1 -> int
     //f2 -> [
@@ -744,9 +744,9 @@ public class SymbolTableConstructor implements Visitor {
         x.f2.accept(this);
         x.f3.accept(this);
         x.f4.accept(this);
-    } //end 39th
+    } //end ArrayAllocationExpression
 
-    //40th
+    //AllocationExpression
     //f0 -> new
     //f1 -> Identifier()
     //f2 -> (
@@ -757,9 +757,9 @@ public class SymbolTableConstructor implements Visitor {
         x.f1.accept(this);
         x.f2.accept(this);
         x.f3.accept(this);
-    } //end 40th
+    } //end AllocationExpression
 
-    //41th
+    //BracketExpression
     //f0 -> (
     //f1 -> Expression()
     //f2 -> )
@@ -768,15 +768,15 @@ public class SymbolTableConstructor implements Visitor {
         x.f0.accept(this);
         x.f1.accept(this);
         x.f2.accept(this);
-    }//end 41th
+    }//end BracketExpression
 
-    //42th
+    //NotExpression
     //f0 -> !
     //f1 -> Expression()
 
     public void visit(NotExpression x){
         x.f0.accept(this);
         x.f1.accept(this);
-    }//end 42th
+    }//end NotExpression
 
 }//end SymbolTableConstructor Class
