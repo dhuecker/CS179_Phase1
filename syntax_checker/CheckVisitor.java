@@ -524,6 +524,233 @@ public class CheckVisitor<R> implements GJNoArguVisitor {
     //f2 -> PrimaryExpression()
     //f3 -> ]
 
+    public R visit(ArrayLookup x){
+        R _ret = null;
+        R arr_ex = x.f0.accept(this);
+        x.f1.accept(this);
+        R index = x.f2.accept(this);
+        x.f3.accept(this);
 
+        if(!arr_ex.equals(ArrayTypeStr) || !index.equals(IntTypeStr)){
+            RegTypeError();
+        }
 
+        _ret = (R)IntTypeStr;
+        return _ret;
+    }//end ArrayLookup
+
+    //TimesExpression
+    //f0 -> PrimaryExpression()
+    //f1 -> *
+    //f2 -> PrimaryExpression()
+
+    public R visit(TimesExpression x){
+        R _ret = null;
+        R RHS = x.f0.accept(this);
+        x.f1.accept(this);
+        R LHS = x.f2.accept(this);
+        if (!RHS.equals(LHS) || !RHS.equals(IntTypeStr) || !LHS.equals(IntTypeStr)){
+            RegTypeError();
+        }
+        _ret = RHS;
+        return _ret;
+    } //end TimesExpression
+
+    //MinusExpression
+    //f0 -> PrimaryExpression()
+    //f1 -> -
+    //f2 -> PrimaryExpression()
+
+    public R visit(MinusExpression x){
+        R _ret = null;
+        R RHS = x.f0.accept(this);
+        x.f1.accept(this);
+        R LHS = x.f2.accept(this);
+        if (!RHS.equals(LHS) || !RHS.equals(IntTypeStr) || !LHS.equals(IntTypeStr)){
+            RegTypeError();
+        }
+        _ret = RHS;
+        return _ret;
+    } //end MinusExpression
+
+    //PlusExpression
+    //f0 -> PrimaryExpression()
+    //f1 -> +
+    //f2 -> PrimaryExpression()
+
+    public R visit(PlusExpression x){
+        R _ret = null;
+        R RHS = x.f0.accept(this);
+        x.f1.accept(this);
+        R LHS = x.f2.accept(this);
+        if (!RHS.equals(LHS) || !RHS.equals(IntTypeStr) || !LHS.equals(IntTypeStr)){
+            RegTypeError();
+        }
+        _ret = RHS;
+        return _ret;
+    } //end PlusExpression
+
+    //CompareExpression
+    //f0 -> PrimaryExpression()
+    //f1 -> <
+    //f2 -> PrimaryExpression()
+
+    public R visit(TimesExpression x){
+        R _ret = null;
+        R RHS = x.f0.accept(this);
+        x.f1.accept(this);
+        R LHS = x.f2.accept(this);
+        if (!RHS.equals(LHS) || !RHS.equals(IntTypeStr) || !LHS.equals(IntTypeStr)){
+            RegTypeError();
+        }
+        _ret = (R) BoolTypeStr;
+        return _ret;
+    } //end CompareExpression
+
+    //AndExpression
+    //f0 -> PrimaryExpression()
+    //f1 -> &&
+    //f2 -> PrimaryExpression()
+
+    public R visit(AndExpression x){
+        R _ret = null;
+        R RHS = x.f0.accept(this);
+        x.f1.accept(this);
+        R LHS = x.f2.accept(this);
+        if (!RHS.equals(LHS) || !RHS.equals(IntTypeStr) || !LHS.equals(IntTypeStr)){
+            RegTypeError();
+        }
+        _ret = RHS;
+        return _ret;
+    } //end AndExpression
+
+    //Expression
+    //f0 -> PrimaryExpression() | PlusExpression() | MinusExpression() | TimesExpression() | CompareExpression() | AndExpression() | ArrayLength() | ArrayLookup() | MessageSend()
+
+    public R visit(Expression x){
+        R _ret = null;
+        _ret = x.f0.accept(this);
+        return _ret;
+    }//end Expression
+
+    //PrintStatement
+    //f0 -> System.out.println
+    //f1 -> (
+    //f2 -> Expression()
+    //f3 -> )
+    //f4 -> ;
+
+    public R visit(PrintStatement x){
+        R _ret = null;
+        x.f0.accept(this);
+        x.f1.accept(this);
+        R expr = x.f2.accept(this);
+        x.f3.accept(this);
+        x.f4.accept(this);
+
+        if(expr == null || !expr.equals(IntTypeStr)){ //check for error here
+            RegTypeError();
+        }
+
+        return _ret;
+    }//end PrintStatement
+
+    //WhileStatement
+    //f0 -> while
+    //f1 -> (
+    //f2 -> Expression()
+    //f3 -> )
+    //f4 -> Statement()
+
+    public R visit(WhileStatement x){
+        R _ret = null;
+        x.f0.accept(this);
+        x.f1.accept(this);
+        R expr = x.f2.accept(this);
+        x.f3.accept(this);
+        x.f4.accept(this);
+        //check for error
+        if (!expr.equals(BoolTypeStr)){
+            RegTypeError();
+        }
+
+        return _ret;
+    }//end WhileStatement
+
+    //IfStatement
+    //f0 -> if
+    //f1 -> (
+    //f2 -> Expression()
+    //f3 -> )
+    //f4 -> Statement()
+    //f5 -> else
+    //f6 -> Statement()
+
+    public R visit(IfStatement x){
+        R _ret = null;
+        x.f0.accept(this);
+        x.f1.accept(this);
+        R expr = x.f2.accept(this);
+        x.f3.accept(this);
+        x.f4.accept(this);
+        x.f5.accept(this);
+        x.f6.accept(this);
+        //check for error
+        if (!expr.equals(BoolTypeStr)){
+            RegTypeError();
+        }
+
+        return _ret;
+    }//end IfStatement
+
+    //ArrayAssignmentStatement
+    //f0 -> Identifier()
+    //f1 -> [
+    //f2 -> Expression()
+    //f3 -> ]
+    //f4 -> =
+    //f5 -> Expression()
+    //f6 -> ;
+
+    public R visit(ArrayAssignmentStatement x){
+        R _ret = null;
+        R ident = x.f0.accept(this);
+        x.f1.accept(this);
+        R expr = x.f2.accept(this);
+        x.f3.accept(this);
+        x.f4.accept(this);
+        R expr2 = x.f5.accept(this);
+        x.f6.accept(this);
+
+        //Now check for any errors
+        if (!ident.equals(ArrayTypeStr)){
+            RegTypeError();
+        }
+
+        if (!expr.equals(IntTypeStr)){
+            RegTypeError();
+        }
+
+        if (!expr2.equals(IntTypeStr)){
+            RegTypeError();
+        }
+
+        return _ret;
+    }//end ArrayAssignmentStatement
+
+    //AssignmentStatement
+    //f0 -> Identifier()
+    //f1 -> =
+    //f2 -> Expression()
+    //f3 -> ;
+
+    public R visit(AssignmentStatement x){
+        R _ret = null;
+        x.f0.accept(this);
+        x.f1.accept(this);
+        String ExType = (String) x.f2.accept(this);
+        x.f3.accept(this);
+
+        //continue here
+    }
 }
