@@ -233,10 +233,191 @@ public class CheckVisitor<R> implements GJNoArguVisitor {
     //f2 -> )
 
     public R visit(BracketExpression x){
-        R temp = null;
+        R _ret = null;
         x.f0.accept(this);
-        temp = x.f1.accept(this);
+        _ret = x.f1.accept(this);
         x.f2.accept(this);
-        return temp;
-    }
+        return _ret;
+    } //end BracketExpression
+
+    //NotExpression
+    //f0 -> !
+    //f1 -> Expression
+
+    public R visit(NotExpression x){
+        R _ret = null;
+        x.f0.accept(this);
+        _ret = x.f1.accept(this);
+        if (!_ret.equals(BoolTypeStr)){
+            RegTypeError();
+        }
+        return _ret;
+    }//end NotExpression
+
+    //AllocationExpression
+    //f0 -> new
+    //f1 -> Identifier()
+    //f2 -> (
+    //f3 -> )
+
+    public R visit(AllocationExpression x){
+        R _ret =null;
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+        x.f3.accept(this);
+
+        //creating new class instance makes a new symbol table
+        ClassBook newC = (ClassBook) symbolTable.get(Symbol.symbol(x.f1.f0.toString()));
+        if(newC == null){
+            RegTypeError();
+            return null;
+        }
+        _ret = (R)newC.classname;
+        return _ret;
+    } //end AllocationExpression
+
+    //ArrayAllocationExpression
+    //f0 -> new
+    //f1 -> int
+    //f2 -> [
+    //f3 -> Expression()
+    //f4 -> ]
+
+    public R visit(ArrayAllocationExpression x){
+        R _ret = null;
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+        x.f3.accept(this);
+        x.f4.accept(this);
+
+        _ret = (R)ArrayTypeStr;
+        return _ret;
+    }//end ArrayAllocationExpression
+
+    //ThisExpression
+    //f0 -> this
+
+    public R visit(ThisExpression x){
+        R _ret = null;
+        x.f0.accept(this);
+
+        String currentName = currentClass.classname;
+        //check the class exists in symbol table
+        if(symbolTable.get(Symbol.symbol(currentName)) == null){
+            RegTypeError();
+        }
+
+        _ret = (R)currentName;
+        return _ret;
+    }//end ThisExpression
+
+    //Indentifier
+    //f0 -> <INDENTIFIER>
+
+    public R visit(Identifier x){
+        R _ret = null;
+        x.f0.accept(this);
+
+        Book id = null;
+        //curent method takes precende over class
+        if(currentMethod != null){
+            Book tbook = currentMethod.myItems.get(Symbol.symbol(x.f0.toString()));
+            if(tbook != null)
+                id = tbook;
+        }
+
+        if(currentClass !=null && id == null){
+            Book tbook = currentClass.myItems.get(Symbol.symbol(x.f0.toString()));
+            if(tbook != null)
+                id = tbook;
+        }
+
+        if(id instanceof IntBook){
+            _ret = (R)IntTypeStr;
+        }
+
+        if (id instanceof ArrayBook){
+            _ret = (R)ArrayTypeStr;
+        }
+
+        if (id instanceof BoolBook){
+            _ret= (R)BoolTypeStr;
+        }
+
+        if(id instanceof ClassBook){
+            _ret = (R)((ClassBook) id).classname;
+        }
+
+        if(id instanceof ClassTypeBook){
+            _ret = (R)((ClassTypeBook) id).classname;
+        }
+        return _ret;
+    }//end Identifier
+
+    //FalseLiteral
+    //f0 -> false
+
+    public R visit(FalseLiteral x){
+        R _ret = null;
+        x.f0.accept(this);
+        _ret = (R)BoolTypeStr;
+        return _ret;
+    }// end FalseLiteral
+
+    //TrueLiteral
+    //fo -> true
+
+    public R visit(TrueLiteral x){
+        R _ret = null;
+        x.f0.accept(this);
+        _ret = (R)BoolTypeStr;
+        return _ret;
+    }//end TrueLiteral
+
+    //IntegerLiteral
+    //f0 -> <INTEGER_LITERAL>
+
+    public R visit(IntegerLiteral x){
+        R _ret = null;
+        x.f0.accept(this);
+        _ret = (R)IntTypeStr;
+        return _ret;
+    } //end IntergerLiteral
+
+    //PrimaryExpression
+    //f0 -> BracketExpression() | NotExpression()| ArrayAllocationExpression() | AllocationExpression() | ThisExpreession() | TrueLiteral() | FalseLiteral() | IntegerLiteral() | Identifier()
+
+    public R visit(PrimaryExpression x){
+        R _ret = null;
+        _ret = x.f0.accept(this);
+        return _ret;
+    } //end PrimaryExpression
+
+    //ExpressionRest
+    // f0 -> ,
+    // f1 -> Expression()
+
+    public R visit(ExpressionRest x){
+        R _ret =null;
+        x.f0.accept(this);
+        R temp = x.f1.accept(this);
+        _ret = temp;
+        return _ret;
+    } //end ExpressionRest
+
+    //ExpressionList
+    //f0 -> Expression()
+    //f1 -> ( ExpressionRest())*
+
+    public R visit(ExpressionList x){
+        R _ret = null;
+        x.f0.accept(this);
+        x.f1.accept(this);
+        return _ret;
+    } //end ExpressionList
+
+
+
 }
