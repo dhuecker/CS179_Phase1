@@ -751,6 +751,314 @@ public class CheckVisitor<R> implements GJNoArguVisitor {
         String ExType = (String) x.f2.accept(this);
         x.f3.accept(this);
 
+
         //continue here
-    }
+        Book tempMid = null;
+        //Does f0 ident exist in symbol table already
+        if (currentMethod != null){
+            tempMid = currentMethod.myItems.get(Symbol.symbol(x.f0.f0.toString()));
+        }
+        Book tempCid = currentClass.myItems.get(Symbol.symbol(x.f0.f0.toString()));
+        //Error check
+        if (tempMid == null && tempCid == null){
+            RegTypeError();
+        }
+
+        //Do both sides of the assignment type check
+        Book tempbook = (tempMid != null) ? tempMid : tempCid;
+        String id = "";
+        if(tempbook instanceof ArrayBook){
+            id = ArrayTypeStr;
+        }
+        if (tempbook instanceof BoolBook){
+            id = BoolTypeStr;
+        }
+        if (tempbook instanceof IntBook){
+            id = IntTypeStr;
+        }
+        if (tempbook instanceof ClassBook){
+            id = ((ClassBook)tempbook).classname;
+        }
+        //Another error check below
+        if(ExType == null || !ExType.equals(id) && !isSubType(id, ExType)){
+            RegTypeError();
+        }
+
+        return _ret;
+
+    }//end AssignmentStatement
+
+    //Block
+    //f0 -> {
+    //f1 -> (Statement())*
+    //f2 -> }
+
+    public R visit(Block x){
+        R _ret = null;
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+        return _ret;
+    }//end Block
+
+    //Statement
+    //f0 -> IfStatement() | WhileStatement() | AssignmentStatement() | ArrayAssignmentStatement() | PrintStatement() | Block ()
+
+    public R visit(Statement x){
+        R _ret = null;
+        x.f0.accept(this);
+        return _ret;
+    } //end Statement
+
+    //IntegerType
+    //f0 -> int
+
+    public R visit(IntegerType x){
+        R _ret = null;
+        x.f0.accept(this);
+        return _ret;
+    }//end IntegerType
+
+    //BooleanType
+    //f0 -> boolean
+
+    public R visit(BooleanType x){
+        R _ret = null;
+        x.f0.accept(this);
+        return _ret;
+    }//end BooleanType
+
+    //ArrayType
+    //f0 -> int
+    //f1 -> [
+    //f2 -> ]
+
+    public R visit(ArrayType x){
+        R _ret = null;
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+        return _ret;
+    }//end ArrayType
+
+    //Type
+    //f0 -> Identifier() | ArrayType() | BooleanType() | IntegerType()
+    public R visit(Type x){
+        R _ret = null;
+        x.f0.accept(this);
+        return _ret;
+    }//end Type
+
+    //FormalParameterRest
+    //f0 -> ,
+    //f1 -> FormalParameter()
+
+    public R visit(FormalParameterRest x){
+        R _ret = null;
+        x.f0.accept(this);
+        x.f1.accept(this);
+        return _ret;
+    } //end FormalParameterRest
+
+    //FormalParameter
+    //f0 -> Type()
+    //f1 -> Identifier()
+
+    public R visit(FormalParameter x){
+        R _ret = null;
+        x.f0.accept(this);
+        _ret = x.f1.accept(this);
+        return _ret;
+    } //end FormalParameter
+
+    //FormalParameterList
+    //f0 -> FormalParameter()
+    //f1 -> (FormalParameterRest())*
+
+    public R visit(FormalParameterList x){
+        R _ret = null;
+        x.f0.accept(this);
+        x.f1.accept(this);
+        return _ret;
+    } //end FormalParameterList
+
+
+    //MethodDeclaration
+    //f0 -> public
+    //f1 -> Type()
+    //f2 -> Identifier()
+    //f3 -> (
+    //f4 -> (FormalParameterList())?
+    //f5 -> )
+    //f6 -> {
+    //f7 -> (VarDeclaration())*
+    //f8 -> (Statement())*
+    //f9 -> return
+    //f10 -> Expression()
+    //f11 -> ;
+    //f12 -> }
+
+    public R visit(MethodDeclaration x){
+        R _ret = null;
+        currentMethod = (MethodsBook) currentClass.functions.get(Symbol.symbol(methodname(x)));
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+        x.f3.accept(this);
+        x.f4.accept(this);
+        x.f5.accept(this);
+        x.f6.accept(this);
+        x.f7.accept(this);
+        x.f8.accept(this);
+        x.f9.accept(this);
+        String checkType = (String)x.f10.accept(this);
+        x.f11.accept(this);
+        x.f12.accept(this);
+
+        //now check return type
+        if (x.f1.f0.choice instanceof Identifier){
+            _ret = (R) ((ClassTypeBook)currentMethod.typeb).classname;
+        }
+        if (x.f1.f0.choice instanceof ArrayType){
+            _ret = (R) ArrayTypeStr;
+        }
+        if (x.f1.f0.choice instanceof BooleanType){
+            _ret = (R) BoolTypeStr;
+        }
+        if (x.f1.f0.choice instanceof IntegerType){
+            _ret = (R) IntTypeStr;
+        }
+
+        //more error checking before return
+        if (!((R)checkType).equals(_ret)){
+            RegTypeError();
+        }
+        if(!distinct(x.f4)){
+            RegTypeError();
+        }
+
+        return _ret;
+    }//end MethodDeclaration
+
+    //VarDeclaration
+    //f0 -> Type()
+    //f1 -> Identifier()
+    //f2 -> ;
+
+    public R visit(VarDeclaration x){
+        R _ret = null;
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+        return _ret;
+    }//end VarDeclaration
+
+    //ClassExtendsDeclaration
+    //f0 -> class
+    //f1 -> Identifier()
+    //f2 -> extends
+    //f3 -> Identifier()
+    //f4 -> {
+    //f5 -> (VarDeclaration())*
+    //f6 -> (MethodDeclaration())*
+    //f7 -> }
+
+    public R visit(ClassExtendsDeclaration x){
+        R _ret = null;
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+        x.f3.accept(this);
+        x.f4.accept(this);
+        x.f5.accept(this);
+        x.f6.accept(this);
+        x.f7.accept(this);
+        return _ret;
+    } //end ClassExtendsDeclaration
+
+    //ClassDeclaration
+    //f0 -> class
+    //f1 -> Identifier()
+    //f2 -> {
+    //f3 -> (VarDeclaration())*
+    //f4 -> (MethodDeclaration())*
+    //f5 -> }
+
+    public R visit(ClassDeclaration x){
+        R _ret = null;
+        currentClass = (ClassBook)symbolTable.get(Symbol.symbol(classname(x)));
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+        x.f3.accept(this);
+        x.f4.accept(this);
+        x.f5.accept(this);
+        return _ret;
+    } //end ClassDeclaration
+
+    //TypeDeclaration
+    //f0 -> ClassDeclaration() | ClassExtendsDeclaration()
+
+    public R visit(TypeDeclaration x){
+        R _ret = null;
+        x.f0.accept(this);
+        return _ret;
+    }//end TypeDeclaration
+
+    //Mainclass
+    //f0 -> class
+    //f1 -> Identifier()
+    //f2 -> {
+    //f3 -> public
+    //f4 -> static
+    //f5 -> void
+    //f6 -> main
+    //f7 -> (
+    //f8 -> String
+    //f9 -> [
+    //f10 -> ]
+    //f11 -> Identifier()
+    //f12 -> )
+    //f13 -> {
+    //f14 -> (VarDeclaration())*
+    //f15 -> (Statement())*
+    //f16 -> }
+    //f17 -> }
+
+    public R visit(MainClass x){
+        R _ret = null;
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+        x.f3.accept(this);
+        x.f4.accept(this);
+        x.f5.accept(this);
+        x.f6.accept(this);
+        x.f7.accept(this);
+        x.f8.accept(this);
+        x.f9.accept(this);
+        x.f10.accept(this);
+        x.f11.accept(this);
+        x.f12.accept(this);
+        x.f13.accept(this);
+        x.f14.accept(this);
+        x.f15.accept(this);
+        x.f16.accept(this);
+        x.f17.accept(this);
+        return _ret;
+    } //end MainClass
+
+    //Goal
+    //f0 -> MainClass()
+    //f1 -> (TypeDeclaration())*
+    //f2 -> <EOF>
+    public R visit(Goal x){
+        R _ret = null;
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+        return _ret;
+    }//end Goal
+
+
 }
