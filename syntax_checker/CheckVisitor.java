@@ -418,6 +418,112 @@ public class CheckVisitor<R> implements GJNoArguVisitor {
         return _ret;
     } //end ExpressionList
 
+    //MessageSend
+    //f0 -> PrimaryExpression()
+    //f1 -> .
+    //f2 -> Identifier()
+    //f3 -> (
+    //f4 -> (ExpressionList())?
+    //f5 -> )
+
+    public R visit(MessageSend x){
+        R _ret = null;
+        String check = (String)x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+        x.f3.accept(this);
+        x.f4.accept(this);
+        x.f5.accept(this);
+        //if check is null throw an error
+        if(check == null){
+            RegTypeError();
+            return null;
+        }
+
+        //Does method exist in class
+        ClassBook cbook = (ClassBook)symbolTable.get(Symbol.symbol(check));
+        MethodsBook mbook = (MethodsBook)cbook.functions.get(Symbol.symbol(x.f2.f0.toString()));
+        //Now checking superclass for method
+        if(mbook ==null){
+            ClassBook tempBook = cbook;
+            while( tempBook != null){
+                MethodsBook tempM = (MethodsBook) tempBook.functions.get(Symbol.symbol(x.f2.f0.toString()));
+
+                if(tempM != null){
+                    mbook = tempM;
+                    break; //get out of while
+                }
+                tempBook = (ClassBook)symbolTable.get(Symbol.symbol(tempBook.parent));
+            }
+
+            if(tempBook == null){ //if tempBook is still null then throw an error
+                RegTypeError();
+                return null;
+            }
+        }
+        if(mbook == null){ //same as tempBook throw error if still null and return null
+            RegTypeError();
+            return null;
+        }
+
+        if(x.f4.present()){
+            //check expression list has correct length
+            if(mbook.paramNum != ((ExpressionList)x.f4.node).f1.size()){
+                RegTypeError();
+            }
+            //are the variables the expected types
+            if(!((ExpressionList)x.f4.node).f0.accept(this).equals(mbook.ptypes.get(0)) && mbook.paramNum != 0){
+                RegTypeError();
+            }
+
+            for(int a = 0; a < ((ExpressionList)x.f4.node).f1.size(); a++){
+                String currentType = (String)((ExpressionList)x.f4.node).f1.elementAt(a).accept(this);
+                if(!currentType.equals(mbook.ptypes.get(a+1)) && !isSubType(mbook.ptypes.get(a+1), currentType)){
+                    RegTypeError();
+                }
+            }
+        }
+
+        //Now setup _ret with correct Type String
+        if(mbook.typeb instanceof ArrayBook){
+            _ret = (R) ArrayTypeStr;
+        }
+
+        if(mbook.typeb instanceof IntBook){
+            _ret = (R) IntTypeStr;
+        }
+
+        if(mbook.typeb instanceof BoolBook){
+            _ret = (R) BoolTypeStr;
+        }
+
+        if(mbook.typeb instanceof ClassTypeBook){
+            _ret = (R)((ClassTypeBook) mbook.typeb).classname;
+        }
+
+        return _ret;
+    }// end MessageSend
+
+    //ArrayLength
+    //f0 -> PrimaryExpression()
+    //f1 -> .
+    //f2 -> length
+
+    public R visit(ArrayLength x){
+        R _ret =null;
+        x.f0.accept(this);
+        x.f1.accept(this);
+        x.f2.accept(this);
+        _ret = (R)IntTypeStr;
+        return _ret;
+    }//end ArrayLength
+
+    //ArrayLookup
+    //f0 -> PrimaryExpression()
+    //f1 -> [
+    //f2 -> PrimaryExpression()
+    //f3 -> ]
+
 
 
 }
