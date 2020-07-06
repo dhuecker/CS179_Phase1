@@ -376,7 +376,7 @@ public class SymbolTableConstructor implements Visitor {
         else{
             tempB.paramNum = 0;
         }
-        currentClass.methods.put(Symbol.symbol(methodname(x)), tempB);
+        currentClass.functions.put(Symbol.symbol(methodname(x)), tempB);
     } //end MethodDeclaration
 
     //FormalParameterList

@@ -595,7 +595,7 @@ public class CheckVisitor<R> implements GJNoArguVisitor {
     //f1 -> <
     //f2 -> PrimaryExpression()
 
-    public R visit(TimesExpression x){
+    public R visit(CompareExpression x){
         R _ret = null;
         R RHS = x.f0.accept(this);
         x.f1.accept(this);
