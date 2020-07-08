@@ -25,11 +25,11 @@ public class Typecheck {
             oneVisitor.sTable = symbolTable;
             //now construct the symbol table
             root.accept(oneVisitor);
-            Graph classGraph = Graph();
+            Graph classGraph = new Graph();
             List<String> classes = symbolTable.hashtable.getAllElements();
             for(int a =0; a < classes.size(); a++){
                 ClassBook cbook = (ClassBook) symbolTable.get(Symbol.symbol(classes.get(a)));
-                ClassGraph.addEdge(cbook.parent, classes.get(a));
+                classGraph.addEdges(cbook.parent, classes.get(a));
             }
 
             //check if the graph is acyclic
@@ -90,4 +90,51 @@ class Graph {
         nodes = new ArrayList<>();
     }
     //contiue here
+
+    //adding edges to graph
+    public void addEdges(String key1, String key2){
+        if(key1 != null){
+            addNodes(key1).another= addNodes(key2);
+        }
+        else
+            addNodes(key2);
+    }
+
+    GraphNode addNodes(String key){
+        GraphNode x = find(key);
+        if(x != null || key == null){
+            return x;
+        }
+        GraphNode temp = new GraphNode(key);
+        nodes.add(temp);
+        return temp;
+    }
+
+    GraphNode find(String key){
+        for(int a = 0; a < nodes.size(); a++){
+            if(nodes.get(a).value.equals(key) && key != null){
+                return nodes.get(a);
+            }
+        }
+        return null;
+    }
+    public boolean acyclic(){
+        GraphNode current = nodes.get(0); //first node
+        while (current != null && !current.beenHere){
+            if(current.another != null && current.another.beenHere){
+                return false;
+            }
+            current.beenHere = true;
+            current = current.another;
+        }
+        return true;
+    }
+    public void print(){
+        GraphNode current = nodes.get(0);
+        while(current != null && !current.beenHere){
+            System.out.print(current.value+ "-->");
+            current.beenHere = true;
+            current = current.another;
+        }
+    }
 }
