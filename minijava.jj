@@ -2,9 +2,9 @@ options {
   JAVA_UNICODE_ESCAPE = true;
 }
 
-PARSER_BEGIN(MiniJavaParser)
-  public class MiniJavaParser {}
-PARSER_END(MiniJavaParser)
+PARSER_BEGIN(parser.MiniJavaParser)
+  public class parser.MiniJavaParser {}
+PARSER_END(parser.MiniJavaParser)
 
 SKIP : /* WHITE SPACE */
 {

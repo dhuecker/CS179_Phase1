@@ -227,7 +227,7 @@ public class CheckVisitor<R> implements GJNoArguVisitor {
 
     //our classes below
 
-    //BracketExpression vist
+    //BracketExpression
     //f0 -> (
     //f1 -> Expression()
     //f2 -> )

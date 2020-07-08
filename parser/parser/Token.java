@@ -3,7 +3,7 @@
 /**
  * Describes the input token stream.
  */
-
+package parser;
 public class Token implements java.io.Serializable {
 
   /**
