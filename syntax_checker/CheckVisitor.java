@@ -7,7 +7,7 @@ import syntaxtree.*;
 
 import javax.swing.plaf.BorderUIResource;
 
-public class CheckVisitor<R> implements GJNoArguVisitor {
+public class CheckVisitor<R> implements GJNoArguVisitor<R> {
     public static String ArrayTypeStr = "ARRAY_TYPE";
     public static String BoolTypeStr = "BOOL_TYPE";
     public static String IntTypeStr = "INT_TYPE";
