@@ -6,23 +6,23 @@ options {
    JAVA_UNICODE_ESCAPE = true;
 }
 
-PARSER_BEGIN(parser.MiniJavaParser)
+PARSER_BEGIN(MiniJavaParser)
 import syntaxtree.*;
 import java.util.Vector;
 
 
-public class parser.MiniJavaParser
+public class MiniJavaParser 
 {
 }
 
-class parser.JTBToolkit {
+class JTBToolkit {
    static NodeToken makeNodeToken(Token t) {
       return new NodeToken(t.image.intern(), t.kind, t.beginLine, t.beginColumn, t.endLine, t.endColumn);
    }
 }
 
 
-PARSER_END(parser.MiniJavaParser)
+PARSER_END(MiniJavaParser)
 
 SKIP :
 {
@@ -109,7 +109,7 @@ Goal Goal() :
    { n1.nodes.trimToSize(); }
    n4=<EOF> { 
       n4.beginColumn++; n4.endColumn++;
-      n3 = parser.JTBToolkit.makeNodeToken(n4);
+      n3 = JTBToolkit.makeNodeToken(n4);
    }
    
    { return new Goal(n0,n1,n3); }
@@ -155,20 +155,20 @@ MainClass MainClass() :
    
 }
 {
-   n1="class" { n0 = parser.JTBToolkit.makeNodeToken(n1); }
+   n1="class" { n0 = JTBToolkit.makeNodeToken(n1); }
    n2=Identifier()
-   n4="{" { n3 = parser.JTBToolkit.makeNodeToken(n4); }
-   n6="public" { n5 = parser.JTBToolkit.makeNodeToken(n6); }
-   n8="static" { n7 = parser.JTBToolkit.makeNodeToken(n8); }
-   n10="void" { n9 = parser.JTBToolkit.makeNodeToken(n10); }
-   n12="main" { n11 = parser.JTBToolkit.makeNodeToken(n12); }
-   n14="(" { n13 = parser.JTBToolkit.makeNodeToken(n14); }
-   n16="String" { n15 = parser.JTBToolkit.makeNodeToken(n16); }
-   n18="[" { n17 = parser.JTBToolkit.makeNodeToken(n18); }
-   n20="]" { n19 = parser.JTBToolkit.makeNodeToken(n20); }
+   n4="{" { n3 = JTBToolkit.makeNodeToken(n4); }
+   n6="public" { n5 = JTBToolkit.makeNodeToken(n6); }
+   n8="static" { n7 = JTBToolkit.makeNodeToken(n8); }
+   n10="void" { n9 = JTBToolkit.makeNodeToken(n10); }
+   n12="main" { n11 = JTBToolkit.makeNodeToken(n12); }
+   n14="(" { n13 = JTBToolkit.makeNodeToken(n14); }
+   n16="String" { n15 = JTBToolkit.makeNodeToken(n16); }
+   n18="[" { n17 = JTBToolkit.makeNodeToken(n18); }
+   n20="]" { n19 = JTBToolkit.makeNodeToken(n20); }
    n21=Identifier()
-   n23=")" { n22 = parser.JTBToolkit.makeNodeToken(n23); }
-   n25="{" { n24 = parser.JTBToolkit.makeNodeToken(n25); }
+   n23=")" { n22 = JTBToolkit.makeNodeToken(n23); }
+   n25="{" { n24 = JTBToolkit.makeNodeToken(n25); }
    (
       LOOKAHEAD(2)
       n27=VarDeclaration()
@@ -180,8 +180,8 @@ MainClass MainClass() :
       { n28.addNode(n29); }
    )*
    { n28.nodes.trimToSize(); }
-   n31="}" { n30 = parser.JTBToolkit.makeNodeToken(n31); }
-   n33="}" { n32 = parser.JTBToolkit.makeNodeToken(n33); }
+   n31="}" { n30 = JTBToolkit.makeNodeToken(n31); }
+   n33="}" { n32 = JTBToolkit.makeNodeToken(n33); }
    
    { return new MainClass(n0,n2,n3,n5,n7,n9,n11,n13,n15,n17,n19,n21,n22,n24,n26,n28,n30,n32); }
 }
@@ -224,9 +224,9 @@ ClassDeclaration ClassDeclaration() :
    
 }
 {
-   n1="class" { n0 = parser.JTBToolkit.makeNodeToken(n1); }
+   n1="class" { n0 = JTBToolkit.makeNodeToken(n1); }
    n2=Identifier()
-   n4="{" { n3 = parser.JTBToolkit.makeNodeToken(n4); }
+   n4="{" { n3 = JTBToolkit.makeNodeToken(n4); }
    (
       n6=VarDeclaration()
       { n5.addNode(n6); }
@@ -237,7 +237,7 @@ ClassDeclaration ClassDeclaration() :
       { n7.addNode(n8); }
    )*
    { n7.nodes.trimToSize(); }
-   n10="}" { n9 = parser.JTBToolkit.makeNodeToken(n10); }
+   n10="}" { n9 = JTBToolkit.makeNodeToken(n10); }
    
    { return new ClassDeclaration(n0,n2,n3,n5,n7,n9); }
 }
@@ -262,11 +262,11 @@ ClassExtendsDeclaration ClassExtendsDeclaration() :
    
 }
 {
-   n1="class" { n0 = parser.JTBToolkit.makeNodeToken(n1); }
+   n1="class" { n0 = JTBToolkit.makeNodeToken(n1); }
    n2=Identifier()
-   n4="extends" { n3 = parser.JTBToolkit.makeNodeToken(n4); }
+   n4="extends" { n3 = JTBToolkit.makeNodeToken(n4); }
    n5=Identifier()
-   n7="{" { n6 = parser.JTBToolkit.makeNodeToken(n7); }
+   n7="{" { n6 = JTBToolkit.makeNodeToken(n7); }
    (
       n9=VarDeclaration()
       { n8.addNode(n9); }
@@ -277,7 +277,7 @@ ClassExtendsDeclaration ClassExtendsDeclaration() :
       { n10.addNode(n11); }
    )*
    { n10.nodes.trimToSize(); }
-   n13="}" { n12 = parser.JTBToolkit.makeNodeToken(n13); }
+   n13="}" { n12 = JTBToolkit.makeNodeToken(n13); }
    
    { return new ClassExtendsDeclaration(n0,n2,n3,n5,n6,n8,n10,n12); }
 }
@@ -294,7 +294,7 @@ VarDeclaration VarDeclaration() :
 {
    n0=Type()
    n1=Identifier()
-   n3=";" { n2 = parser.JTBToolkit.makeNodeToken(n3); }
+   n3=";" { n2 = JTBToolkit.makeNodeToken(n3); }
    
    { return new VarDeclaration(n0,n1,n2); }
 }
@@ -328,16 +328,16 @@ MethodDeclaration MethodDeclaration() :
    
 }
 {
-   n1="public" { n0 = parser.JTBToolkit.makeNodeToken(n1); }
+   n1="public" { n0 = JTBToolkit.makeNodeToken(n1); }
    n2=Type()
    n3=Identifier()
-   n5="(" { n4 = parser.JTBToolkit.makeNodeToken(n5); }
+   n5="(" { n4 = JTBToolkit.makeNodeToken(n5); }
    (
       n7=FormalParameterList()
       { n6.addNode(n7); }
    )?
-   n9=")" { n8 = parser.JTBToolkit.makeNodeToken(n9); }
-   n11="{" { n10 = parser.JTBToolkit.makeNodeToken(n11); }
+   n9=")" { n8 = JTBToolkit.makeNodeToken(n9); }
+   n11="{" { n10 = JTBToolkit.makeNodeToken(n11); }
    (
       LOOKAHEAD(2)
       n13=VarDeclaration()
@@ -349,10 +349,10 @@ MethodDeclaration MethodDeclaration() :
       { n14.addNode(n15); }
    )*
    { n14.nodes.trimToSize(); }
-   n17="return" { n16 = parser.JTBToolkit.makeNodeToken(n17); }
+   n17="return" { n16 = JTBToolkit.makeNodeToken(n17); }
    n18=Expression()
-   n20=";" { n19 = parser.JTBToolkit.makeNodeToken(n20); }
-   n22="}" { n21 = parser.JTBToolkit.makeNodeToken(n22); }
+   n20=";" { n19 = JTBToolkit.makeNodeToken(n20); }
+   n22="}" { n21 = JTBToolkit.makeNodeToken(n22); }
    
    { return new MethodDeclaration(n0,n2,n3,n4,n6,n8,n10,n12,n14,n16,n18,n19,n21); }
 }
@@ -399,7 +399,7 @@ FormalParameterRest FormalParameterRest() :
    
 }
 {
-   n1="," { n0 = parser.JTBToolkit.makeNodeToken(n1); }
+   n1="," { n0 = JTBToolkit.makeNodeToken(n1); }
    n2=FormalParameter()
    
    { return new FormalParameterRest(n0,n2); }
@@ -446,9 +446,9 @@ ArrayType ArrayType() :
    
 }
 {
-   n1="int" { n0 = parser.JTBToolkit.makeNodeToken(n1); }
-   n3="[" { n2 = parser.JTBToolkit.makeNodeToken(n3); }
-   n5="]" { n4 = parser.JTBToolkit.makeNodeToken(n5); }
+   n1="int" { n0 = JTBToolkit.makeNodeToken(n1); }
+   n3="[" { n2 = JTBToolkit.makeNodeToken(n3); }
+   n5="]" { n4 = JTBToolkit.makeNodeToken(n5); }
    
    { return new ArrayType(n0,n2,n4); }
 }
@@ -461,7 +461,7 @@ BooleanType BooleanType() :
    
 }
 {
-   n1="boolean" { n0 = parser.JTBToolkit.makeNodeToken(n1); }
+   n1="boolean" { n0 = JTBToolkit.makeNodeToken(n1); }
    
    { return new BooleanType(n0); }
 }
@@ -474,7 +474,7 @@ IntegerType IntegerType() :
    
 }
 {
-   n1="int" { n0 = parser.JTBToolkit.makeNodeToken(n1); }
+   n1="int" { n0 = JTBToolkit.makeNodeToken(n1); }
    
    { return new IntegerType(n0); }
 }
@@ -529,13 +529,13 @@ Block Block() :
    
 }
 {
-   n1="{" { n0 = parser.JTBToolkit.makeNodeToken(n1); }
+   n1="{" { n0 = JTBToolkit.makeNodeToken(n1); }
    (
       n3=Statement()
       { n2.addNode(n3); }
    )*
    { n2.nodes.trimToSize(); }
-   n5="}" { n4 = parser.JTBToolkit.makeNodeToken(n5); }
+   n5="}" { n4 = JTBToolkit.makeNodeToken(n5); }
    
    { return new Block(n0,n2,n4); }
 }
@@ -553,9 +553,9 @@ AssignmentStatement AssignmentStatement() :
 }
 {
    n0=Identifier()
-   n2="=" { n1 = parser.JTBToolkit.makeNodeToken(n2); }
+   n2="=" { n1 = JTBToolkit.makeNodeToken(n2); }
    n3=Expression()
-   n5=";" { n4 = parser.JTBToolkit.makeNodeToken(n5); }
+   n5=";" { n4 = JTBToolkit.makeNodeToken(n5); }
    
    { return new AssignmentStatement(n0,n1,n3,n4); }
 }
@@ -578,12 +578,12 @@ ArrayAssignmentStatement ArrayAssignmentStatement() :
 }
 {
    n0=Identifier()
-   n2="[" { n1 = parser.JTBToolkit.makeNodeToken(n2); }
+   n2="[" { n1 = JTBToolkit.makeNodeToken(n2); }
    n3=Expression()
-   n5="]" { n4 = parser.JTBToolkit.makeNodeToken(n5); }
-   n7="=" { n6 = parser.JTBToolkit.makeNodeToken(n7); }
+   n5="]" { n4 = JTBToolkit.makeNodeToken(n5); }
+   n7="=" { n6 = JTBToolkit.makeNodeToken(n7); }
    n8=Expression()
-   n10=";" { n9 = parser.JTBToolkit.makeNodeToken(n10); }
+   n10=";" { n9 = JTBToolkit.makeNodeToken(n10); }
    
    { return new ArrayAssignmentStatement(n0,n1,n3,n4,n6,n8,n9); }
 }
@@ -605,12 +605,12 @@ IfStatement IfStatement() :
    
 }
 {
-   n1="if" { n0 = parser.JTBToolkit.makeNodeToken(n1); }
-   n3="(" { n2 = parser.JTBToolkit.makeNodeToken(n3); }
+   n1="if" { n0 = JTBToolkit.makeNodeToken(n1); }
+   n3="(" { n2 = JTBToolkit.makeNodeToken(n3); }
    n4=Expression()
-   n6=")" { n5 = parser.JTBToolkit.makeNodeToken(n6); }
+   n6=")" { n5 = JTBToolkit.makeNodeToken(n6); }
    n7=Statement()
-   n9="else" { n8 = parser.JTBToolkit.makeNodeToken(n9); }
+   n9="else" { n8 = JTBToolkit.makeNodeToken(n9); }
    n10=Statement()
    
    { return new IfStatement(n0,n2,n4,n5,n7,n8,n10); }
@@ -630,10 +630,10 @@ WhileStatement WhileStatement() :
    
 }
 {
-   n1="while" { n0 = parser.JTBToolkit.makeNodeToken(n1); }
-   n3="(" { n2 = parser.JTBToolkit.makeNodeToken(n3); }
+   n1="while" { n0 = JTBToolkit.makeNodeToken(n1); }
+   n3="(" { n2 = JTBToolkit.makeNodeToken(n3); }
    n4=Expression()
-   n6=")" { n5 = parser.JTBToolkit.makeNodeToken(n6); }
+   n6=")" { n5 = JTBToolkit.makeNodeToken(n6); }
    n7=Statement()
    
    { return new WhileStatement(n0,n2,n4,n5,n7); }
@@ -654,11 +654,11 @@ PrintStatement PrintStatement() :
    
 }
 {
-   n1="System.out.println" { n0 = parser.JTBToolkit.makeNodeToken(n1); }
-   n3="(" { n2 = parser.JTBToolkit.makeNodeToken(n3); }
+   n1="System.out.println" { n0 = JTBToolkit.makeNodeToken(n1); }
+   n3="(" { n2 = JTBToolkit.makeNodeToken(n3); }
    n4=Expression()
-   n6=")" { n5 = parser.JTBToolkit.makeNodeToken(n6); }
-   n8=";" { n7 = parser.JTBToolkit.makeNodeToken(n8); }
+   n6=")" { n5 = JTBToolkit.makeNodeToken(n6); }
+   n8=";" { n7 = JTBToolkit.makeNodeToken(n8); }
    
    { return new PrintStatement(n0,n2,n4,n5,n7); }
 }
@@ -730,7 +730,7 @@ AndExpression AndExpression() :
 }
 {
    n0=PrimaryExpression()
-   n2="&&" { n1 = parser.JTBToolkit.makeNodeToken(n2); }
+   n2="&&" { n1 = JTBToolkit.makeNodeToken(n2); }
    n3=PrimaryExpression()
    
    { return new AndExpression(n0,n1,n3); }
@@ -747,7 +747,7 @@ CompareExpression CompareExpression() :
 }
 {
    n0=PrimaryExpression()
-   n2="<" { n1 = parser.JTBToolkit.makeNodeToken(n2); }
+   n2="<" { n1 = JTBToolkit.makeNodeToken(n2); }
    n3=PrimaryExpression()
    
    { return new CompareExpression(n0,n1,n3); }
@@ -764,7 +764,7 @@ PlusExpression PlusExpression() :
 }
 {
    n0=PrimaryExpression()
-   n2="+" { n1 = parser.JTBToolkit.makeNodeToken(n2); }
+   n2="+" { n1 = JTBToolkit.makeNodeToken(n2); }
    n3=PrimaryExpression()
    
    { return new PlusExpression(n0,n1,n3); }
@@ -781,7 +781,7 @@ MinusExpression MinusExpression() :
 }
 {
    n0=PrimaryExpression()
-   n2="-" { n1 = parser.JTBToolkit.makeNodeToken(n2); }
+   n2="-" { n1 = JTBToolkit.makeNodeToken(n2); }
    n3=PrimaryExpression()
    
    { return new MinusExpression(n0,n1,n3); }
@@ -798,7 +798,7 @@ TimesExpression TimesExpression() :
 }
 {
    n0=PrimaryExpression()
-   n2="*" { n1 = parser.JTBToolkit.makeNodeToken(n2); }
+   n2="*" { n1 = JTBToolkit.makeNodeToken(n2); }
    n3=PrimaryExpression()
    
    { return new TimesExpression(n0,n1,n3); }
@@ -817,9 +817,9 @@ ArrayLookup ArrayLookup() :
 }
 {
    n0=PrimaryExpression()
-   n2="[" { n1 = parser.JTBToolkit.makeNodeToken(n2); }
+   n2="[" { n1 = JTBToolkit.makeNodeToken(n2); }
    n3=PrimaryExpression()
-   n5="]" { n4 = parser.JTBToolkit.makeNodeToken(n5); }
+   n5="]" { n4 = JTBToolkit.makeNodeToken(n5); }
    
    { return new ArrayLookup(n0,n1,n3,n4); }
 }
@@ -836,8 +836,8 @@ ArrayLength ArrayLength() :
 }
 {
    n0=PrimaryExpression()
-   n2="." { n1 = parser.JTBToolkit.makeNodeToken(n2); }
-   n4="length" { n3 = parser.JTBToolkit.makeNodeToken(n4); }
+   n2="." { n1 = JTBToolkit.makeNodeToken(n2); }
+   n4="length" { n3 = JTBToolkit.makeNodeToken(n4); }
    
    { return new ArrayLength(n0,n1,n3); }
 }
@@ -859,14 +859,14 @@ MessageSend MessageSend() :
 }
 {
    n0=PrimaryExpression()
-   n2="." { n1 = parser.JTBToolkit.makeNodeToken(n2); }
+   n2="." { n1 = JTBToolkit.makeNodeToken(n2); }
    n3=Identifier()
-   n5="(" { n4 = parser.JTBToolkit.makeNodeToken(n5); }
+   n5="(" { n4 = JTBToolkit.makeNodeToken(n5); }
    (
       n7=ExpressionList()
       { n6.addNode(n7); }
    )?
-   n9=")" { n8 = parser.JTBToolkit.makeNodeToken(n9); }
+   n9=")" { n8 = JTBToolkit.makeNodeToken(n9); }
    
    { return new MessageSend(n0,n1,n3,n4,n6,n8); }
 }
@@ -899,7 +899,7 @@ ExpressionRest ExpressionRest() :
    
 }
 {
-   n1="," { n0 = parser.JTBToolkit.makeNodeToken(n1); }
+   n1="," { n0 = JTBToolkit.makeNodeToken(n1); }
    n2=Expression()
    
    { return new ExpressionRest(n0,n2); }
@@ -962,7 +962,7 @@ IntegerLiteral IntegerLiteral() :
    
 }
 {
-   n1=<INTEGER_LITERAL> { n0 = parser.JTBToolkit.makeNodeToken(n1); }
+   n1=<INTEGER_LITERAL> { n0 = JTBToolkit.makeNodeToken(n1); }
    
    { return new IntegerLiteral(n0); }
 }
@@ -975,7 +975,7 @@ TrueLiteral TrueLiteral() :
    
 }
 {
-   n1="true" { n0 = parser.JTBToolkit.makeNodeToken(n1); }
+   n1="true" { n0 = JTBToolkit.makeNodeToken(n1); }
    
    { return new TrueLiteral(n0); }
 }
@@ -988,7 +988,7 @@ FalseLiteral FalseLiteral() :
    
 }
 {
-   n1="false" { n0 = parser.JTBToolkit.makeNodeToken(n1); }
+   n1="false" { n0 = JTBToolkit.makeNodeToken(n1); }
    
    { return new FalseLiteral(n0); }
 }
@@ -1001,7 +1001,7 @@ Identifier Identifier() :
    
 }
 {
-   n1=<IDENTIFIER> { n0 = parser.JTBToolkit.makeNodeToken(n1); }
+   n1=<IDENTIFIER> { n0 = JTBToolkit.makeNodeToken(n1); }
    
    { return new Identifier(n0); }
 }
@@ -1014,7 +1014,7 @@ ThisExpression ThisExpression() :
    
 }
 {
-   n1="this" { n0 = parser.JTBToolkit.makeNodeToken(n1); }
+   n1="this" { n0 = JTBToolkit.makeNodeToken(n1); }
    
    { return new ThisExpression(n0); }
 }
@@ -1034,11 +1034,11 @@ ArrayAllocationExpression ArrayAllocationExpression() :
    
 }
 {
-   n1="new" { n0 = parser.JTBToolkit.makeNodeToken(n1); }
-   n3="int" { n2 = parser.JTBToolkit.makeNodeToken(n3); }
-   n5="[" { n4 = parser.JTBToolkit.makeNodeToken(n5); }
+   n1="new" { n0 = JTBToolkit.makeNodeToken(n1); }
+   n3="int" { n2 = JTBToolkit.makeNodeToken(n3); }
+   n5="[" { n4 = JTBToolkit.makeNodeToken(n5); }
    n6=Expression()
-   n8="]" { n7 = parser.JTBToolkit.makeNodeToken(n8); }
+   n8="]" { n7 = JTBToolkit.makeNodeToken(n8); }
    
    { return new ArrayAllocationExpression(n0,n2,n4,n6,n7); }
 }
@@ -1056,10 +1056,10 @@ AllocationExpression AllocationExpression() :
    
 }
 {
-   n1="new" { n0 = parser.JTBToolkit.makeNodeToken(n1); }
+   n1="new" { n0 = JTBToolkit.makeNodeToken(n1); }
    n2=Identifier()
-   n4="(" { n3 = parser.JTBToolkit.makeNodeToken(n4); }
-   n6=")" { n5 = parser.JTBToolkit.makeNodeToken(n6); }
+   n4="(" { n3 = JTBToolkit.makeNodeToken(n4); }
+   n6=")" { n5 = JTBToolkit.makeNodeToken(n6); }
    
    { return new AllocationExpression(n0,n2,n3,n5); }
 }
@@ -1073,7 +1073,7 @@ NotExpression NotExpression() :
    
 }
 {
-   n1="!" { n0 = parser.JTBToolkit.makeNodeToken(n1); }
+   n1="!" { n0 = JTBToolkit.makeNodeToken(n1); }
    n2=Expression()
    
    { return new NotExpression(n0,n2); }
@@ -1090,9 +1090,9 @@ BracketExpression BracketExpression() :
    
 }
 {
-   n1="(" { n0 = parser.JTBToolkit.makeNodeToken(n1); }
+   n1="(" { n0 = JTBToolkit.makeNodeToken(n1); }
    n2=Expression()
-   n4=")" { n3 = parser.JTBToolkit.makeNodeToken(n4); }
+   n4=")" { n3 = JTBToolkit.makeNodeToken(n4); }
    
    { return new BracketExpression(n0,n2,n3); }
 }
